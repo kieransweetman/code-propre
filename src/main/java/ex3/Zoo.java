@@ -1,46 +1,65 @@
 package ex3;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Représente le concept de zoo
+ * 
+ * @author kieran sweetman
+ *
+ */
 public class Zoo {
 
+	/** name */
 	private String nom;
-	private SavaneAfricaine savaneAfricaine;
-	private ZoneCarnivore zoneCarnivore;
-	private FermeReptile fermeReptile;
-	private Aquarium aquarium;
-	
-	public Zoo(String nom){
+
+	/** different zones */
+	private List<Zone> zones = new ArrayList<>();
+
+	/**
+	 * Constructeur
+	 * 
+	 * @param nom zoo name
+	 */
+	public Zoo(String nom) {
 		this.nom = nom;
-	}
-	
-	public void addAnimal(String nomAnimal, String typeAnimal, String comportement){
-		if (typeAnimal.equals("MAMMIFERE") && comportement.equals("CARNIVORE")){
-			zoneCarnivore.addAnimal(typeAnimal, nomAnimal, comportement);
-		}
-		else if (typeAnimal.equals("MAMMIFERE") && comportement.equals("HERBIVORE")){
-			savaneAfricaine.addAnimal(typeAnimal, nomAnimal, comportement);
-		}
-		else if (typeAnimal.equals("REPTILE")){
-			fermeReptile.addAnimal(typeAnimal, nomAnimal, comportement);
-		}
-		else if (typeAnimal.equals("POISSON")){
-			aquarium.addAnimal(typeAnimal, nomAnimal, comportement);
-		}
-	}
-	
-	public void afficherListeAnimaux(){
-		savaneAfricaine.afficherListeAnimaux();
-		zoneCarnivore.afficherListeAnimaux();
-		fermeReptile.afficherListeAnimaux();
-		aquarium.afficherListeAnimaux();
+		Collections.addAll(zones, new SavaneAfricaine(), new ZoneCarnivore(), new Aquarium(), new FermeReptile());
 	}
 
-	/** Getter for nom
+	/**
+	 * add animal to zoo, based on zone (foot diet & animal type)
+	 * 
+	 * @param animal animal
+	 */
+	public void addAnimal(Animal animal) {
+		for (Zone zone : zones) {
+			if (zone.accept(animal)) {
+				zone.addAnimal(animal);
+			}
+		}
+	}
+
+	/**
+	 * List animals
+	 */
+	public void afficherListeAnimaux() {
+		zones.forEach(z -> z.afficherListeAnimaux());
+	}
+
+	/**
+	 * Getter for nom
+	 * 
 	 * @return the nom
 	 */
 	public String getNom() {
 		return nom;
 	}
 
-	/** Setter
+	/**
+	 * Setter
+	 * 
 	 * @param nom the nom to set
 	 */
 	public void setNom(String nom) {

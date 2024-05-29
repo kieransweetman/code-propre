@@ -5,32 +5,51 @@ import java.util.List;
 
 public class Inventaire {
 
-	private List<Caisse> caisses;
+	private List<AbstractRegister> caisses;
 
 	public Inventaire() {
 		caisses = new ArrayList<>();
-		caisses.add(new Caisse("Petits objets"));
-		caisses.add(new Caisse("Moyens objets"));
-		caisses.add(new Caisse("Grands objets"));
+		caisses.add(new SmallCaisse("Petits objets"));
+		caisses.add(new MediumCaisse("Moyens objets"));
+		caisses.add(new LargeCaisse("Grands objets"));
 	}
 
+	/**
+	 * Add an item to the stock.
+	 * 
+	 * @param item item à ajouter
+	 */
 	public void addItem(Item item) {
 
-		//TODO Faites évoluer ce code (idée: c'est le caisse qui doit "savoir" si elle peut accepter un objet ou non)
-		if (item.getPoids() < 5) {
-			caisses.get(0).getItems().add(item);
-		}
-		if (item.getPoids() >= 5 && item.getPoids() <= 20) {
-			caisses.get(1).getItems().add(item);
-		}
-		if (item.getPoids() >= 20) {
-			caisses.get(2).getItems().add(item);
+		for (AbstractRegister caisse : caisses) {
+			if (caisse.accept(item)) {
+				caisse.getItems().add(item);
+			}
 		}
 	}
 
+	/**
+	 * get number of items in the inventory
+	 * 
+	 * @return int
+	 */
 	public int taille() {
-		
-		//TODO faites évoluer ce code.
-		return caisses.get(0).getItems().size() + caisses.get(1).getItems().size() + caisses.get(2).getItems().size();
+
+		int somme = 0;
+		for (AbstractRegister caisse : caisses) {
+			somme += caisse.getSize();
+		}
+		return somme;
+	}
+
+	@Override
+	public String toString() {
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("Inventaire: ").append(taille()).append(" objet(s).");
+		for (AbstractRegister c : caisses) {
+			builder.append("\n\t").append(c);
+		}
+		return builder.toString();
 	}
 }
